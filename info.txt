@@ -1,0 +1,12 @@
+To do:
+-Subscribers
+    - Create route to unsubscribe -> Done
+    - Create rouute for counts like total, monthly and in between dates -> Done
+- Email
+    - add unsubscriber button
+- Blogs
+    - Create routes for counts of total month of selected year, total count -> Done
+- Newletters
+    - Create routes for counts like total, counts of total month of selected year -> Done
+- 
+- implement counts and graphs for blogs, subscribers and newletters

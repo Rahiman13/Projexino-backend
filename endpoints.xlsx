@@ -1,0 +1,18 @@
+Blogs Endpoints
+
+Method	Endpoint	Payload	Description
+POST	/api/blogs	{ "title": "Blog Title", "content": "Content here", "author": "John" }	Create a new blog
+GET	/api/blogs	None	Get all blogs
+GET	/api/blogs/:id	None	Get a single blog
+PUT	/api/blogs/:id	{ "title": "Updated Title" }	Update a blog
+DELETE	/api/blogs/:id	None	Delete a blog
+
+
+Newsletter Endpoints
+
+Method	Endpoint	Payload	Description
+POST	/api/newsletters/subscribe	{ "email": "user@example.com" }	Subscribe to the newsletter
+GET	/api/newsletters	None	Get all subscriptions
+GET	/api/newsletters/:id	None	Get a single subscription
+PUT	/api/newsletters/:id	{ "email": "new@example.com" }	Update a subscription
+DELETE	/api/newsletters/:id	None	Delete a subscription
