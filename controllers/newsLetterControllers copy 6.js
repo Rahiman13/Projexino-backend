@@ -269,15 +269,15 @@ const scheduleBlogNewsletter = async (req, res) => {
             }
             
             .header {
-                background: linear-gradient(135deg, #2b5a9e 0%, #19234d 100%);
+                background: linear-gradient(135deg, #19234d 0%, #2b5a9e 100%);
                 color: #fff;
-                padding: 100px 60px;
+                padding: 80px 60px;
                 text-align: center;
                 position: relative;
                 overflow: hidden;
             }
             
-            /* Enhanced abstract pattern overlay */
+            /* Abstract pattern overlay */
             .header::before {
                 content: '';
                 position: absolute;
@@ -286,57 +286,28 @@ const scheduleBlogNewsletter = async (req, res) => {
                 right: 0;
                 bottom: 0;
                 background: 
-                    radial-gradient(circle at 20% 30%, rgba(217, 118, 74, 0.15) 0%, transparent 70%),
-                    radial-gradient(circle at 80% 70%, rgba(43, 90, 158, 0.2) 0%, transparent 70%),
-                    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
-                opacity: 1;
+                    radial-gradient(circle at 20% 30%, rgba(217, 118, 74, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 70%, rgba(43, 90, 158, 0.15) 0%, transparent 50%);
+                opacity: 0.8;
             }
             
             .header h1 {
-                font-size: 2rem;
-                font-weight: 800;
+                font-size: 3.5rem;
+                font-weight: 700;
                 margin-bottom: 24px;
                 position: relative;
-                text-transform: uppercase;
+                background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0.9) 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
                 letter-spacing: -0.02em;
-                text-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-                animation: shimmer 2s infinite linear;
-            }
-
-            @keyframes shimmer {
-                0% {
-                    background-position: -200% center;
-                }
-                100% {
-                    background-position: 200% center;
-                }
-            }
-
-            /* Decorative elements */
-            .header::after {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                height: 120px;
-                background: linear-gradient(to top right,
-                    transparent 48%,
-                    rgba(255, 255, 255, 0.1) 49%,
-                    rgba(255, 255, 255, 0.1) 51%,
-                    transparent 52%);
-                background-size: 30px 30px;
-                opacity: 0.5;
             }
 
             .header p {
                 font-size: 1.25rem;
-                color: rgba(255, 255, 255, 0.6);
+                color: #cbd5e1;
                 max-width: 600px;
                 margin: 0 auto;
                 line-height: 1.6;
-                position: relative;
-                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             }
             
             .content {
@@ -549,7 +520,7 @@ const scheduleBlogNewsletter = async (req, res) => {
                                 <p class="blog-description">
                                     ${blog.excerpt || blog.content.substring(0, 150)}...
                                 </p>
-                                <a href="https://projexino.com/blogs/${blog._id}" class="read-more">
+                                <a href="${process.env.FRONTEND_URL}/blog/${blog.slug}" class="read-more">
                                     Read More
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 4px;">
                                         <path d="M5 12h14M12 5l7 7-7 7"/>
@@ -563,7 +534,7 @@ const scheduleBlogNewsletter = async (req, res) => {
                 <div class="footer">
                     <p>Thank you for being part of our community!</p>
                     <p>You're receiving this email because you subscribed to our newsletter.</p>
-                    <a href="https://projexino.com/unsubscribe/{{subscriberEmail}}" class="unsubscribe">
+                    <a href="${process.env.FRONTEND_URL}/unsubscribe" class="unsubscribe">
                         Unsubscribe from our newsletter
                     </a>
                 </div>
@@ -604,12 +575,11 @@ const scheduleBlogNewsletter = async (req, res) => {
                     for (const subscriber of subscribers) {
                         try {
                             console.log(`Attempting to send to ${subscriber.email}`);
-                            const personalizedContent = content.replace('{{subscriberEmail}}', encodeURIComponent(subscriber.email));
                             await transporter.sendMail({
                                 from: process.env.EMAIL_USER || 'rahiman@projexino.com',
                                 to: subscriber.email,
                                 subject: newsletter.subject,
-                                html: personalizedContent,
+                                html: newsletter.content,
                             });
                             successful++;
                             console.log(`Successfully sent to ${subscriber.email}`);
@@ -847,36 +817,31 @@ const sendAnnouncement = async (req, res) => {
                 max-width: 800px;
                 margin: 40px auto;
                 padding: 0 20px;
-                position: relative;
-            }
-            
-            .wrapper::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 20%;
-                right: 20%;
-                height: 100%;
-                background: linear-gradient(135deg, rgba(43, 90, 158, 0.1), rgba(217, 118, 74, 0.1));
-                filter: blur(100px);
-                z-index: -1;
             }
             
             .container {
                 background: #fff;
                 border-radius: 24px;
                 box-shadow: 
-                    0 25px 50px -12px rgba(25, 35, 77, 0.15),
+                    0 25px 50px -12px rgba(25, 35, 77, 0.1),
                     0 0 0 1px rgba(25, 35, 77, 0.05);
                 overflow: hidden;
                 position: relative;
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.2);
             }
 
-            /* Enhanced header styles */
+            /* Decorative top bar */
+            .container::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 6px;
+                background: linear-gradient(90deg, #2b5a9e, #d9764a);
+            }
+            
             .header {
-                background: linear-gradient(135deg, #2b5a9e 0%, #19234d 100%);
+                // background: linear-gradient(135deg, #19234d 0%, #2b5a9e 100%);
                 color: #fff;
                 padding: 80px 60px;
                 text-align: center;
@@ -884,122 +849,37 @@ const sendAnnouncement = async (req, res) => {
                 overflow: hidden;
             }
             
+            /* Abstract pattern overlay */
             .header::before {
-                content: '';
-                position: absolute;
-                top: -50%;
-                left: -50%;
-                width: 200%;
-                height: 200%;
-                background: repeating-linear-gradient(
-                    45deg,
-                    rgba(255, 255, 255, 0.1) 0px,
-                    rgba(255, 255, 255, 0.1) 1px,
-                    transparent 1px,
-                    transparent 10px
-                );
-                animation: patternMove 20s linear infinite;
-            }
-
-            @keyframes patternMove {
-                0% {
-                    transform: rotate(0deg);
-                }
-                100% {
-                    transform: rotate(360deg);
-                }
-            }
-
-            /* Fixed size image container with enhanced styling */
-            .image-container {
-                width: 600px;
-                height: 400px;
-                margin: 40px auto;
-                position: relative;
-                border-radius: 20px;
-                overflow: hidden;
-                box-shadow: 
-                    0 20px 40px rgba(0, 0, 0, 0.1),
-                    0 0 0 1px rgba(255, 255, 255, 0.1);
-            }
-
-            .announcement-image {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            }
-
-            .image-container:hover .announcement-image {
-                transform: scale(1.05);
-            }
-
-            .image-container::after {
                 content: '';
                 position: absolute;
                 top: 0;
                 left: 0;
                 right: 0;
                 bottom: 0;
-                background: linear-gradient(
-                    to bottom,
-                    transparent 0%,
-                    rgba(25, 35, 77, 0.05) 100%
-                );
-                pointer-events: none;
+                background: 
+                    radial-gradient(circle at 20% 30%, rgba(217, 118, 74, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 70%, rgba(43, 90, 158, 0.15) 0%, transparent 50%);
+                opacity: 0.8;
             }
-
-            /* Decorative elements */
-            .image-container::before {
-                content: '';
-                position: absolute;
-                top: -2px;
-                left: -2px;
-                right: -2px;
-                bottom: -2px;
-                background: linear-gradient(45deg, #2b5a9e, #d9764a);
-                z-index: -1;
-                border-radius: 22px;
-                opacity: 0.5;
-            }
-
-            @media (max-width: 768px) {
-                .image-container {
-                    width: 100%;
-                    height: 300px;
-                    margin: 30px auto;
-                }
-            }
-
+            
             .header h1 {
-                font-size: 2rem;
-                font-weight: 800;
+                font-size: 3.5rem;
+                font-weight: 700;
                 margin-bottom: 24px;
                 position: relative;
-                text-transform: uppercase;
+                background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0.9) 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
                 letter-spacing: -0.02em;
-                
-                text-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-                animation: shimmer 2s infinite linear;
-            }
-
-            @keyframes shimmer {
-                0% {
-                    background-position: -200% center;
-                }
-                100% {
-                    background-position: 200% center;
-                }
             }
 
             .header p {
                 font-size: 1.25rem;
-                color: rgba(255, 255, 255, 0.6);
+                color: #cbd5e1;
                 max-width: 600px;
                 margin: 0 auto;
                 line-height: 1.6;
-                position: relative;
-                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             }
             
             .content {
@@ -1205,7 +1085,7 @@ const sendAnnouncement = async (req, res) => {
                     </div>
                     <p>Thank you for being part of our community!</p>
                     <p>You're receiving this email because you subscribed to our newsletter.</p>
-                    <a href="https://projexino.com/unsubscribe/{{subscriberEmail}}" class="unsubscribe">
+                    <a href="${process.env.FRONTEND_URL}/unsubscribe?email=${encodeURIComponent(subscriber.email)}" class="unsubscribe">
                         Unsubscribe from our newsletter
                     </a>
                 </div>
@@ -1355,9 +1235,9 @@ const unsubscribeSubscriber = async (req, res) => {
         await subscriber.save();
 
         // Send a confirmation response
-        res.status(200).json({
+        res.status(200).json({ 
             message: 'Successfully unsubscribed from the newsletter',
-            subscriber
+            subscriber 
         });
     } catch (error) {
         res.status(400).json({ error: error.message });

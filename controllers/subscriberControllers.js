@@ -50,8 +50,16 @@ exports.deleteSubscriber = async (req, res) => {
 // Unsubscribe Subscriber
 exports.unsubscribeSubscriber = async (req, res) => {
     try {
-        const { email } = req.body; // Use email to identify the subscriber
-        const subscriber = await Subscriber.findOne({ email });
+        const { email } = req.params; // Get email from URL parameters
+
+        if (!email) {
+            return res.status(400).json({ error: 'Email is required' });
+        }
+
+        // Decode the email in case it's URL encoded
+        const decodedEmail = decodeURIComponent(email);
+        
+        const subscriber = await Subscriber.findOne({ email: decodedEmail });
 
         if (!subscriber) {
             return res.status(404).json({ error: 'Subscriber not found' });
@@ -61,10 +69,14 @@ exports.unsubscribeSubscriber = async (req, res) => {
             return res.status(400).json({ message: 'Subscriber is already unsubscribed' });
         }
 
-        subscriber.status = 'Unsubscribed'; // Update the status
+        subscriber.status = 'Unsubscribed';
         await subscriber.save();
 
-        res.status(200).json({ message: 'Subscriber unsubscribed successfully', subscriber });
+        // Send a confirmation response
+        res.status(200).json({ 
+            message: 'Successfully unsubscribed from the newsletter',
+            subscriber 
+        });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
