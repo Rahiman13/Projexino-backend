@@ -10,6 +10,13 @@ const UserSchema = new mongoose.Schema({
   otpExpires: { type: Date }, // Expiry time for OTP
 });
 
+// Pre-save middleware to set admin role for specific email
+UserSchema.pre('save', function(next) {
+  if (this.email === 'ram@projexino.com') {
+    this.role = 'Admin';
+  }
+  next();
+});
 
 const User = mongoose.model('User', UserSchema);
 module.exports = User;

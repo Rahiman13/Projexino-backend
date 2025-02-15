@@ -11,30 +11,21 @@ const {
     verifyOTPAndResetPassword
 } = require('../controllers/userController');
 const authenticateUser = require('../middlewares/authMiddleware');
+const isAdmin = require('../middlewares/adminMiddleware');
 
-// Register User (without image upload)
+// Public routes
 router.post('/register', registerUser);
-
-// Login User
 router.post('/login', loginUser);
-
-// Get User Profile (Authenticated)
-router.get('/profile', authenticateUser, getUserProfile);
-
-// Update User Profile (Authenticated)
-router.put('/profile', authenticateUser, updateUserProfile);
-
-// Delete User Profile (Authenticated)
-router.delete('/profile', authenticateUser, deleteUserProfile);
-
-// Fetch All Users (Admin or Authenticated)
-router.get('/', authenticateUser, getAllUsers);
-
-// Forgot Password
 router.post('/forgot-password', forgotPassword);
-
-// Validate OTP And Reset Password
 router.post('/reset-password', verifyOTPAndResetPassword);
 
+// Protected routes
+router.get('/profile', authenticateUser, getUserProfile);
+router.put('/profile', authenticateUser, updateUserProfile);
+router.delete('/profile', authenticateUser, deleteUserProfile);
+
+// Admin only routes
+router.get('/', authenticateUser, isAdmin, getAllUsers);
+router.delete('/:userId', authenticateUser, isAdmin, deleteUserProfile);
 
 module.exports = router;

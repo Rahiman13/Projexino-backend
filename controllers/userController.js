@@ -27,7 +27,6 @@ exports.registerUser = async (req, res) => {
             name,
             email,
             password: hashedPassword,
-            role: 'Author', // Default role
         });
 
         const savedUser = await newUser.save();
@@ -113,21 +112,18 @@ exports.deleteUserProfile = async (req, res) => {
     }
 };
 
-// Fetch All Users
+// Fetch All Users (Admin only)
 exports.getAllUsers = async (req, res) => {
     try {
+        if (req.user.role !== 'Admin') {
+            return res.status(403).json({ error: 'Access denied. Admin only.' });
+        }
         const users = await User.find().select('-password'); // Exclude password from the response
         res.status(200).json(users);
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch users' });
     }
 };
-
-
-
-
-
-
 
 exports.forgotPassword = async (req, res) => {
     const { email } = req.body;
@@ -155,9 +151,6 @@ exports.forgotPassword = async (req, res) => {
         res.status(500).json({ error: 'Failed to send OTP' });
     }
 };
-
-
-
 
 exports.verifyOTPAndResetPassword = async (req, res) => {
     const { email, otp, newPassword } = req.body;
