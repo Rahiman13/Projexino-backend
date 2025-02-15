@@ -1,7 +1,7 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const dotenv = require('dotenv');
 const cors = require('cors');
 const morgan = require('morgan'); // Added for logging HTTP requests
 const Newsletter = require('./models/newsletter'); // Add this line
@@ -10,9 +10,6 @@ const Newsletter = require('./models/newsletter'); // Add this line
 const subscriberRoutes = require('./routes/subscriberRoutes');
 const newsletterRoutes = require('./routes/newsLetterRoutes');
 const emailRoutes = require('./routes/emailRoutes');
-
-// Load environment variables
-dotenv.config();
 
 // Initialize Express App
 const app = express();

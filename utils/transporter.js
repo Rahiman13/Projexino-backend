@@ -1,24 +1,24 @@
 const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 const transporter = nodemailer.createTransport({
+    service: 'gmail',
     host: 'smtp.gmail.com',
     port: 587,
     secure: false,
     auth: {
-        user: process.env.EMAIL_USER || 'rahiman@projexino.com',
-        pass: process.env.EMAIL_APP_PASSWORD || 'fhay qjga nyjt tczq'
-        // user: 'rahiman@projexino.com',
-        // pass: 'fhay qjga nyjt tczq'
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_APP_PASSWORD
     },
     tls: {
         rejectUnauthorized: false
     }
 });
 
-// Verify transporter configuration
-transporter.verify(function (error, success) {
+// Add error handling to verify configuration
+transporter.verify((error, success) => {
     if (error) {
-        console.log('Transporter verification error:', error);
+        console.error('Transporter verification error:', error);
     } else {
         console.log('Server is ready to send emails');
     }

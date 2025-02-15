@@ -1,15 +1,7 @@
 const nodemailer = require('nodemailer');
 const Subscriber = require('../models/Subscriber');
-const Blog =require('../models/blog')
-
-const transporter = nodemailer.createTransport({
-    service: 'Gmail', // or your email provider
-    auth: {
-        user: 'rahiman@projexino.com',
-        pass: 'fhay qjga nyjt tczq',
-        // pass: 'fhay qjga nyjt tczq',
-    },
-});
+const Blog = require('../models/blog');
+const transporter = require('../utils/transporter');
 
 // Function to send newsletters
 exports.sendNewsletter = async (req, res) => {
