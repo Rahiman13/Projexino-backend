@@ -10,6 +10,8 @@ const Newsletter = require('./models/newsletter'); // Add this line
 const subscriberRoutes = require('./routes/subscriberRoutes');
 const newsletterRoutes = require('./routes/newsLetterRoutes');
 const emailRoutes = require('./routes/emailRoutes');
+const careerRoutes = require('./routes/careersRoute');
+const contactRoutes = require('./routes/contactRoute');
 
 // Initialize Express App
 const app = express();
@@ -48,6 +50,8 @@ app.use('/api/subscribers', subscriberRoutes); // Routes for subscribers
 app.use('/api/newsletters', newsletterRoutes); // Routes for newsletters
 app.use('/api/emails', emailRoutes); // Routes for sending emails
 app.use('/api/admin', require('./routes/adminRoutes'));
+app.use('/api/careers', careerRoutes);
+app.use('/api/contacts', contactRoutes);
 
 // Default Route for Health Check
 app.get('/', (req, res) => {
