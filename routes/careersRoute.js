@@ -21,9 +21,9 @@ router.get('/:id', getCareerById);
 router.get('/counts/:year', getMonthlyCareerCounts);
 
 // Protected routes (require authentication)
-router.post('/', authenticateUser, isAdmin, createCareer);
-router.put('/:id', authenticateUser, isAdmin, updateCareer);
-router.delete('/:id', authenticateUser, isAdmin, deleteCareer);
+router.post('/', authenticateUser,  createCareer);
+router.put('/:id', authenticateUser,  updateCareer);
+router.delete('/:id', authenticateUser,  deleteCareer);
 
 // Application route with resume upload
 router.post('/:id/apply', upload.single('resume'), applyForCareer);

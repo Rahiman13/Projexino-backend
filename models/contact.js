@@ -13,6 +13,15 @@ const contactSchema = new mongoose.Schema({
         type: String, 
         required: true 
     },
+    status: {
+        type: String,
+        enum: ['Seen', 'Unseen'],
+        default: 'Unseen'
+    },
+    seenAt: {
+        type: Date,
+        default: null
+    },
     createdAt: { 
         type: Date, 
         default: Date.now 
