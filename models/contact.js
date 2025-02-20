@@ -35,7 +35,7 @@ contactSchema.post('save', async function(doc) {
     try {
         await transporter.sendMail({
             from: process.env.EMAIL_USER,
-            to: 'becproject99@gmail.com',
+            to: 'hello@projexino.com',
             subject: 'New Contact Form Submission',
             html: `
             <!DOCTYPE html>
