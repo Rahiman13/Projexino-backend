@@ -54,12 +54,61 @@ exports.createBlog = async (req, res) => {
             authorName,
             tags,
             category,
-            status = 'Draft', // Default to 'Draft'
+            status = 'Draft',
             seoMetadata,
             excerpt,
-            visibility = 'Public', // Default to 'Public'
+            visibility = 'Public',
             relatedBlogs = [],
         } = req.body;
+
+        // Parse content if it's a string
+        let contentArray;
+        try {
+            contentArray = typeof content === 'string' ? JSON.parse(content) : content;
+            
+            if (!Array.isArray(contentArray)) {
+                throw new Error('Content must be an array of content blocks');
+            }
+        } catch (error) {
+            return res.status(400).json({ 
+                error: 'Invalid content format. Content must be a valid array of content blocks' 
+            });
+        }
+
+        // Parse and validate content structure
+        const structuredContent = contentArray.map(block => {
+            switch (block.type) {
+                case 'paragraph':
+                    return {
+                        type: 'paragraph',
+                        text: block.text
+                    };
+                case 'heading':
+                    return {
+                        type: 'heading',
+                        level: Math.min(Math.max(block.level, 1), 6),
+                        text: block.text
+                    };
+                case 'list':
+                    return {
+                        type: 'list',
+                        items: Array.isArray(block.items) ? block.items : []
+                    };
+                case 'quote':
+                    return {
+                        type: 'quote',
+                        text: block.text
+                    };
+                case 'code':
+                    return {
+                        type: 'code',
+                        text: block.text,
+                        language: block.language || 'plaintext'
+                    };
+                default:
+                    return null;
+            }
+        }).filter(block => block !== null);
 
         // Upload images to Cloudinary
         let authorImageUrl = null;
@@ -89,7 +138,7 @@ exports.createBlog = async (req, res) => {
         const blog = new Blog({
             title,
             slug,
-            content,
+            content: structuredContent,
             authorName,
             authorImage: authorImageUrl,
             featuredImage: featuredImageUrl,

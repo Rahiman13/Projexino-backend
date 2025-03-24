@@ -705,7 +705,7 @@ const scheduleBlogNewsletter = async (req, res) => {
                                     ` : ''}
                                 </div>
                                 <p class="blog-description">
-                                    ${blog.excerpt || blog.content.substring(0, 150)}...
+                                    ${blog.excerpt || formatBlogContent(blog.content)}
                                 </p>
                                 <a href="https://projexino.com/blogs/${blog._id}" class="read-more">
                                     Read More
@@ -1422,6 +1422,41 @@ const unsubscribeSubscriber = async (req, res) => {
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
+};
+
+const formatBlogContent = (content, maxLength = 150) => {
+    let formattedText = '';
+    let totalLength = 0;
+
+    for (const block of content) {
+        if (totalLength >= maxLength) break;
+
+        switch (block.type) {
+            case 'paragraph':
+                formattedText += block.text + '\n\n';
+                totalLength += block.text.length;
+                break;
+            case 'heading':
+                formattedText += block.text + '\n';
+                totalLength += block.text.length;
+                break;
+            case 'list':
+                block.items.forEach(item => {
+                    formattedText += `• ${item}\n`;
+                    totalLength += item.length + 2;
+                });
+                formattedText += '\n';
+                break;
+            case 'quote':
+                formattedText += `"${block.text}"\n\n`;
+                totalLength += block.text.length + 2;
+                break;
+        }
+    }
+
+    return totalLength > maxLength 
+        ? formattedText.substring(0, maxLength) + '...'
+        : formattedText;
 };
 
 module.exports = {

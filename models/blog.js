@@ -3,7 +3,16 @@ const mongoose = require('mongoose');
 const blogSchema = new mongoose.Schema({
     title: { type: String, required: true },
     slug: { type: String, required: true },
-    content: { type: String, required: true },
+    content: {
+        type: [{
+            type: { type: String, enum: ['paragraph', 'heading', 'list', 'quote', 'code'] },
+            level: { type: Number }, // For headings (h1-h6)
+            items: [String], // For lists
+            text: String, // For paragraphs, quotes, and code
+            language: String // For code blocks
+        }],
+        required: true
+    },
     authorName: { type: String, required: true },
     authorImage: { type: String, required: true },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
