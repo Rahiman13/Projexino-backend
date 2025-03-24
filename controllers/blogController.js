@@ -76,39 +76,7 @@ exports.createBlog = async (req, res) => {
         }
 
         // Parse and validate content structure
-        const structuredContent = contentArray.map(block => {
-            switch (block.type) {
-                case 'paragraph':
-                    return {
-                        type: 'paragraph',
-                        text: block.text
-                    };
-                case 'heading':
-                    return {
-                        type: 'heading',
-                        level: Math.min(Math.max(block.level, 1), 6),
-                        text: block.text
-                    };
-                case 'list':
-                    return {
-                        type: 'list',
-                        items: Array.isArray(block.items) ? block.items : []
-                    };
-                case 'quote':
-                    return {
-                        type: 'quote',
-                        text: block.text
-                    };
-                case 'code':
-                    return {
-                        type: 'code',
-                        text: block.text,
-                        language: block.language || 'plaintext'
-                    };
-                default:
-                    return null;
-            }
-        }).filter(block => block !== null);
+        const structuredContent = validateAndStructureContent(contentArray);
 
         // Upload images to Cloudinary
         let authorImageUrl = null;
@@ -159,6 +127,50 @@ exports.createBlog = async (req, res) => {
     }
 };
 
+// Helper function to validate and structure content
+const validateAndStructureContent = (contentArray) => {
+    if (!Array.isArray(contentArray)) {
+        throw new Error('Content must be an array of content blocks');
+    }
+
+    return contentArray.map(block => {
+        if (!block || !block.type) {
+            return null;
+        }
+
+        switch (block.type) {
+            case 'paragraph':
+                return {
+                    type: 'paragraph',
+                    text: block.text || ''
+                };
+            case 'heading':
+                return {
+                    type: 'heading',
+                    level: Math.min(Math.max(parseInt(block.level) || 1, 1), 6),
+                    text: block.text || ''
+                };
+            case 'list':
+                return {
+                    type: 'list',
+                    items: Array.isArray(block.items) ? block.items.filter(item => typeof item === 'string') : []
+                };
+            case 'quote':
+                return {
+                    type: 'quote',
+                    text: block.text || ''
+                };
+            case 'code':
+                return {
+                    type: 'code',
+                    text: block.text || '',
+                    language: block.language || 'plaintext'
+                };
+            default:
+                return null;
+        }
+    }).filter(block => block !== null);
+};
 
 // Get All Blogs
 exports.getBlogs = async (req, res) => {
@@ -260,39 +272,7 @@ exports.updateBlog = async (req, res) => {
             }
 
             // Parse and validate content structure
-            structuredContent = contentArray.map(block => {
-                switch (block.type) {
-                    case 'paragraph':
-                        return {
-                            type: 'paragraph',
-                            text: block.text
-                        };
-                    case 'heading':
-                        return {
-                            type: 'heading',
-                            level: Math.min(Math.max(block.level, 1), 6),
-                            text: block.text
-                        };
-                    case 'list':
-                        return {
-                            type: 'list',
-                            items: Array.isArray(block.items) ? block.items : []
-                        };
-                    case 'quote':
-                        return {
-                            type: 'quote',
-                            text: block.text
-                        };
-                    case 'code':
-                        return {
-                            type: 'code',
-                            text: block.text,
-                            language: block.language || 'plaintext'
-                        };
-                    default:
-                        return null;
-                }
-            }).filter(block => block !== null);
+            structuredContent = validateAndStructureContent(contentArray);
         } catch (error) {
             return res.status(400).json({ 
                 error: 'Invalid content format. Content must be a valid array of content blocks' 
