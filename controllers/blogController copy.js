@@ -250,55 +250,6 @@ exports.updateBlog = async (req, res) => {
             visibility,
         } = req.body;
 
-        // Parse content if it's a string
-        let structuredContent;
-        try {
-            const contentArray = typeof content === 'string' ? JSON.parse(content) : content;
-            
-            if (!Array.isArray(contentArray)) {
-                throw new Error('Content must be an array of content blocks');
-            }
-
-            // Parse and validate content structure
-            structuredContent = contentArray.map(block => {
-                switch (block.type) {
-                    case 'paragraph':
-                        return {
-                            type: 'paragraph',
-                            text: block.text
-                        };
-                    case 'heading':
-                        return {
-                            type: 'heading',
-                            level: Math.min(Math.max(block.level, 1), 6),
-                            text: block.text
-                        };
-                    case 'list':
-                        return {
-                            type: 'list',
-                            items: Array.isArray(block.items) ? block.items : []
-                        };
-                    case 'quote':
-                        return {
-                            type: 'quote',
-                            text: block.text
-                        };
-                    case 'code':
-                        return {
-                            type: 'code',
-                            text: block.text,
-                            language: block.language || 'plaintext'
-                        };
-                    default:
-                        return null;
-                }
-            }).filter(block => block !== null);
-        } catch (error) {
-            return res.status(400).json({ 
-                error: 'Invalid content format. Content must be a valid array of content blocks' 
-            });
-        }
-
         // Handle image fields if present
         let authorImageUrl = req.body.authorImage || null;
         let featuredImageUrl = req.body.featuredImage || null;
@@ -327,12 +278,12 @@ exports.updateBlog = async (req, res) => {
         const updateData = {
             title,
             slug,
-            content: structuredContent,
+            content,
             authorName,
-            tags: tags ? tags.split(',').map(tag => tag.trim()) : [],
+            tags,
             category,
             status,
-            seoMetadata: seoMetadata ? JSON.parse(seoMetadata) : {},
+            seoMetadata,
             excerpt,
             visibility,
             updatedAt: Date.now(),
