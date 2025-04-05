@@ -65,13 +65,13 @@ exports.createBlog = async (req, res) => {
         let contentArray;
         try {
             contentArray = typeof content === 'string' ? JSON.parse(content) : content;
-            
+
             if (!Array.isArray(contentArray)) {
                 throw new Error('Content must be an array of content blocks');
             }
         } catch (error) {
-            return res.status(400).json({ 
-                error: 'Invalid content format. Content must be a valid array of content blocks' 
+            return res.status(400).json({
+                error: 'Invalid content format. Content must be a valid array of content blocks'
             });
         }
 
@@ -266,7 +266,7 @@ exports.updateBlog = async (req, res) => {
         let structuredContent;
         try {
             const contentArray = typeof content === 'string' ? JSON.parse(content) : content;
-            
+
             if (!Array.isArray(contentArray)) {
                 throw new Error('Content must be an array of content blocks');
             }
@@ -274,8 +274,8 @@ exports.updateBlog = async (req, res) => {
             // Parse and validate content structure
             structuredContent = validateAndStructureContent(contentArray);
         } catch (error) {
-            return res.status(400).json({ 
-                error: 'Invalid content format. Content must be a valid array of content blocks' 
+            return res.status(400).json({
+                error: 'Invalid content format. Content must be a valid array of content blocks'
             });
         }
 
@@ -394,5 +394,19 @@ exports.getAllBlogCounts = async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({ error: error.message });
+    }
+};
+
+// View counts
+exports.updateViewCount = async (req, res) => {
+    try {
+        const blog = await Blog.findByIdAndUpdate(
+            req.params.id,
+            { $inc: { views: 1 } },
+            { new: true }
+        );
+        res.status(200).json({ views: blog.views });
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating view count' });
     }
 };

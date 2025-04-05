@@ -9,6 +9,7 @@ const {
     deleteBlog,
     getBlogCountsByMonth,
     getAllBlogCounts,
+    updateViewCount,
 } = require('../controllers/blogController');
 const authenticateUser = require('../middlewares/authMiddleware');
 
@@ -34,5 +35,8 @@ router.put(
     updateBlog
 );
 router.delete('/:id', authenticateUser, deleteBlog);
+
+// View counts
+router.put('/:id/view', updateViewCount);
 
 module.exports = router;
