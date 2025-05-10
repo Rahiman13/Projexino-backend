@@ -6,10 +6,10 @@ const blogSchema = new mongoose.Schema({
     content: {
         type: [{
             type: { type: String, enum: ['paragraph', 'heading', 'list', 'quote', 'code'] },
-            level: { type: Number },
-            items: [String],
-            text: String,
-            language: String
+            level: { type: Number }, // For headings (h1-h6)
+            items: [String], // For lists
+            text: String, // For paragraphs, quotes, and code
+            language: String // For code blocks
         }],
         required: true
     },
@@ -19,7 +19,6 @@ const blogSchema = new mongoose.Schema({
     tags: { type: [String], default: [] },
     category: { type: String, required: true },
     featuredImage: { type: String },
-    imageAltText: { type: String }, // New
     status: { type: String, default: 'Draft' },
     publishedDate: { type: Date, default: null },
     excerpt: { type: String },
@@ -41,28 +40,6 @@ const blogSchema = new mongoose.Schema({
     isFeatured: { type: Boolean, default: false },
     relatedBlogs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Blog' }],
     visibility: { type: String, default: 'Public' },
-
-    // New fields
-    breadcrumb: { type: [String], default: [] },
-    livePageUrl: { type: String },
-    topViewed: { type: Boolean, default: false },
-    recentlyPublished: { type: Boolean, default: false },
-    tocBasedOn: { type: String, enum: ['heading', 'custom'], default: 'heading' },
-    audio: { type: String }, // e.g. URL to audio file
-    featuredSections: [
-        {
-            heading: { type: String },
-            description: { type: String },
-            image: { type: String },
-        }
-    ],
-    faqs: [
-        {
-            question: { type: String },
-            answer: { type: String }
-        }
-    ],
-
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
 });

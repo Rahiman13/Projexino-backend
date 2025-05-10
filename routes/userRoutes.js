@@ -26,6 +26,7 @@ router.delete('/profile', authenticateUser, deleteUserProfile);
 
 // Admin only routes
 router.get('/', authenticateUser, isAdmin, getAllUsers);
+// router.get('/', getAllUsers);
 router.delete('/:userId', authenticateUser, isAdmin, deleteUserProfile);
 
 module.exports = router;
