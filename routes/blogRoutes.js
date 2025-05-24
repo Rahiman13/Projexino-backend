@@ -37,6 +37,6 @@ router.put(
 router.delete('/:id', authenticateUser, deleteBlog);
 
 // View counts
-router.put('/:id/view', updateViewCount);
+router.put('/view/:livePageUrl', updateViewCount);
 
 module.exports = router;

@@ -681,14 +681,35 @@ exports.getAllBlogCounts = async (req, res) => {
     }
 };
 
-// View counts
+// // View counts
+// exports.updateViewCount = async (req, res) => {
+//     try {
+//         const blog = await Blog.findByIdAndUpdate(
+//             req.params.id,
+//             { $inc: { views: 1 } },
+//             { new: true }
+//         );
+//         res.status(200).json({ views: blog.views });
+//     } catch (error) {
+//         res.status(500).json({ message: 'Error updating view count' });
+//     }
+// };
+
+// View counts based on livePageUrl
 exports.updateViewCount = async (req, res) => {
     try {
-        const blog = await Blog.findByIdAndUpdate(
-            req.params.id,
+        const { livePageUrl } = req.params;
+
+        const blog = await Blog.findOneAndUpdate(
+            { livePageUrl },
             { $inc: { views: 1 } },
             { new: true }
         );
+
+        if (!blog) {
+            return res.status(404).json({ message: 'Blog not found' });
+        }
+
         res.status(200).json({ views: blog.views });
     } catch (error) {
         res.status(500).json({ message: 'Error updating view count' });
